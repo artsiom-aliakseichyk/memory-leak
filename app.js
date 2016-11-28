@@ -56,7 +56,7 @@ angular.module('app', [
   function listener() {
     var leakedArray = [];
     for(var i=0;i<100000;i++){
-      temp[i]=i;
+      leakedArray[i]=i;
     }
     var leakedElement = document.createElement("video");
     console.log("document listener");
