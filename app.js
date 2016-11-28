@@ -45,9 +45,8 @@ angular.module('app', [
     //   var leakedElement = document.createElement("video");
     //   console.log("rootScope click");
     // })
-    function leakObject() {
-      
-    }
+    function leakObject() {}
+    $scope.memoryThatLeaks = new LeakObject();
     document.addEventListener("click", listener, false);
     // $scope.$on("$destroy", function() {
     //   // document.removeEventListener("click", listener, false)
@@ -56,7 +55,7 @@ angular.module('app', [
   }]);
 
   function listener() {
-    
+
     var leakedArray = [];
     for(var i=0;i<1000000;i++){
       leakedArray[i]="some big data to write in memory";
