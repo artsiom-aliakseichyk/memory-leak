@@ -45,15 +45,18 @@ angular.module('app', [
     //   var leakedElement = document.createElement("video");
     //   console.log("rootScope click");
     // })
-
+    function leakObject() {
+      
+    }
     document.addEventListener("click", listener, false);
-    $scope.$on("$destroy", function() {
-      // document.removeEventListener("click", listener, false)
-      // console.log("ABOUT destroy!")
-    });
+    // $scope.$on("$destroy", function() {
+    //   // document.removeEventListener("click", listener, false)
+    //   // console.log("ABOUT destroy!")
+    // });
   }]);
 
   function listener() {
+    
     var leakedArray = [];
     for(var i=0;i<1000000;i++){
       leakedArray[i]="some big data to write in memory";
