@@ -45,7 +45,7 @@ angular.module('app', [
     //   var leakedElement = document.createElement("video");
     //   console.log("rootScope click");
     // })
-    function leakObject() {}
+    function LeakObject() {}
     $scope.memoryThatLeaks = new LeakObject();
     document.addEventListener("click", listener, false);
     // $scope.$on("$destroy", function() {
