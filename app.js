@@ -40,14 +40,14 @@ angular.module('app', [
 
   .controller('aboutController', [ '$scope', '$rootScope', function($scope, $rootScope) {
 
-    // $rootScope.$on("leakedEvent", function leakedFunction() {
-    //   console.log("rootScope click");
-    // })
+    $rootScope.$on("leakedEvent", function leakedFunction() {
+      console.log("rootScope click");
+    })
 
     // document.addEventListener("click", listener, false);
     $scope.$on("$destroy", function() {
       // document.removeEventListener("click", listener, false)
-      console.log("ABOUT destroy!")
+      // console.log("ABOUT destroy!")
     });
   }]);
 
