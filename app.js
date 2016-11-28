@@ -40,13 +40,13 @@ angular.module('app', [
 
   .controller('aboutController', [ '$scope', '$rootScope', function($scope, $rootScope) {
 
-    $rootScope.$on("leakedEvent", function leakedFunction() {
-      var leadedArray = new Array(1000000000000);
-      var leakedElement = document.createElement("video");
-      console.log("rootScope click");
-    })
+    // $rootScope.$on("leakedEvent", function leakedFunction() {
+    //   var leadedArray = new Array(1000000000000);
+    //   var leakedElement = document.createElement("video");
+    //   console.log("rootScope click");
+    // })
 
-    // document.addEventListener("click", listener, false);
+    document.addEventListener("click", listener, false);
     $scope.$on("$destroy", function() {
       // document.removeEventListener("click", listener, false)
       // console.log("ABOUT destroy!")
@@ -54,5 +54,7 @@ angular.module('app', [
   }]);
 
   function listener() {
+    var leadedArray = new Array(1000000000000);
+    var leakedElement = document.createElement("video");
     console.log("document listener");
   }
