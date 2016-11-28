@@ -41,6 +41,8 @@ angular.module('app', [
   .controller('aboutController', [ '$scope', '$rootScope', function($scope, $rootScope) {
 
     $rootScope.$on("leakedEvent", function leakedFunction() {
+      var leadedArray = new Array(10000);
+      var leakedElement = document.createElement("video");
       console.log("rootScope click");
     })
 
