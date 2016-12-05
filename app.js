@@ -13,13 +13,31 @@ angular.module('app', [
         when('/home', {
           template: `
             <h1>Home</h1>
-            <a href="" ng-click="memoryLeak()">Initiate event and subscribe to rootscope</a>
+            <p>Take several heap snapshots</p>
+            <p>Make sure that in current controller we haven't get any memory leaks</p>
           `,
           controller: 'homeController'
         }).
-        when('/about', {
-          template: '<h1>ABOUT</h1>',
-          controller: 'aboutController'
+        when('/rootscopeML', {
+          template: `
+          <h1>Root scope Memory leak</h1>
+          <p>Added event handler to rootScope</p>
+          <p>Start using app (navigate to home and back). Take heap snapshot after every iteration</p>
+          <p>Due to little size of event handler take a look on heap snapshots in comparison mode and notice delta (after every iteration (closure) attribute has increasing by 1)</p>
+          `,
+          controller: 'rootscopeMLController'
+        }).
+        when('/intervalML', {
+          template: `
+          <h1>Interval memory leak</h1>
+          <p>Start using page (navigate through routes) or simply wait 2-5 seconds after each measure.</p>
+          <p>Take heap snapshot and notice increase</p>
+          `,
+          controller: 'intervalMLController'
+        }).
+        when('/documentML', {
+          template: `<h1>Document event listeners memory leak</h1>`,
+          controller: 'documentMLController'
         }).
         otherwise('/home');
     }
@@ -27,39 +45,51 @@ angular.module('app', [
 
 
   .controller('homeController', [ '$scope', '$rootScope', function($scope, $rootScope) {
-
-    
-
-
-    $scope.$on("$destroy", function() {
-      console.log("Home destroy!");
-      
-    });
-
+    //home component
   }])
 
-  .controller('aboutController', [ '$scope', '$rootScope', function($scope, $rootScope) {
-
-    // $rootScope.$on("leakedEvent", function leakedFunction() {
-    //   var leadedArray = new Array(1000000000000);
-    //   var leakedElement = document.createElement("video");
-    //   console.log("rootScope click");
-    // })
-    function LeakObject() {}
-    $scope.memoryThatLeaks = new LeakObject();
-    document.addEventListener("click", listener, false);
-    // $scope.$on("$destroy", function() {
-    //   // document.removeEventListener("click", listener, false)
-    //   // console.log("ABOUT destroy!")
-    // });
-  }]);
-
-  function listener() {
+  .controller('rootscopeMLController', [ '$scope', '$rootScope', '$interval', function($scope, $rootScope, $interval) {
 
     var leakedArray = [];
-    for(var i=0;i<1000000;i++){
-      leakedArray[i]="some big data to write in memory";
+    var rootScopeML = $rootScope.$on('someEvent', function() {
+       leakedArray.push(new Array(new Array(1000)));
+    });
+    
+    $scope.$on("$destroy", function() {
+      // rootscopeML();
+      console.log("Rootscope destroy!");
+    });
+
+    
+  }])
+
+  .controller('documentMLController', ['$scope', function($scope) {
+    $document.on('click', handleDocumentClick);
+    var handleDocumentClick = function() {
+      var leakedArray = [];
+      leakedArray.push(new Array(new Array(1000)));
     }
-    var leakedElement = document.createElement("video");
-    console.log("document listener");
-  }
+
+    element.on('$destroy', function(){
+      // $document.off('click', handleDocumentClick);
+      console.log("Document destroy!")
+    });
+  }])
+
+  .controller('intervalMLController', ['$scope', '$rootScope', '$interval', function($scope, $rootScope, $interval) {
+    var leakedArray = [];
+    var interval = $interval(function () {
+        leakedArray.push(new Array(10000));
+        $rootScope.leak = leakedArray;
+        console.log($rootScope.leak);
+    }, 1000);
+
+    $scope.$on('$destroy', function() {
+      // $interval.cancel(intervalML);
+      console.log("Timeout destroy!");   
+    });
+
+    $scope.stopLeak = function() {
+      $interval.cancel(interval);
+    }
+  }]);
